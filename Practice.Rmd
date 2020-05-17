@@ -10,28 +10,38 @@ date: "5/17/2020"
 output: html_document
 ---
 
-## From: https://resources.github.com/whitepapers/github-and-rstudio/
-
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+## From: https://resources.github.com/whitepapers/github-and-rstudio/
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## R Markdown
+Draft weather data plots
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+DISCLAIMER: Data have not gone through any QA/QC checks. No warranties are given about data accuracy or completeness
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```{r, message = FALSE, warning = FALSE, fig.cap = "Sonora Research Center"}
+## Edwards Plateau savanna study
+## Weather station data processing
+## Sonora Research Station
 
-```{r cars}
-summary(cars)
+library(ggplot2)
+library(ggpubr) # probably drop this and customize plots - used as a shortcut now
+library(data.table)
+library(lubridate)
+library(plyr)
+source('docs/code/readTOA5.R')
+
+# Import data
+weather_data <- readTOA5('docs/data/SonoraMetStation_SonorMet_2019_05_18_16_33_52.dat',
+                         nlabelline = 4,addFileName = TRUE)
+setDT(weather_data)
+
+ggplot(weather_data, aes(x = DateTime, y = AirTC_Avg)) + 
+  xlab("Date") +
+  ylab("Air temperature (C)") +
+  geom_line() +
+#  geom_point(size = 3) +
+  theme_pubr()
+
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
